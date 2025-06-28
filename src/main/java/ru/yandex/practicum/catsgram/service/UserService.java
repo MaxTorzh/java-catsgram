@@ -7,10 +7,7 @@ import ru.yandex.practicum.catsgram.exception.NotFoundException;
 import ru.yandex.practicum.catsgram.model.User;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +20,13 @@ public class UserService {
                 .stream()
                 .sorted(Comparator.comparing(User::getId))
                 .collect(Collectors.toList());
+    }
+
+    public Optional<User> findUserById(Long id) {
+        return users.values()
+                .stream()
+                .filter(user -> user.getId().equals(id))
+                .findFirst();
     }
 
     public User create(User user) {
