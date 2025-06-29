@@ -36,6 +36,8 @@ public class PostService {
         }
         post.setId(getNextId());
         post.setPostDate(Instant.now());
+        post.setAuthor(author.get());
+        post.setAuthorId(author.get().getId());
         posts.put(post.getId(), post);
         return post;
     }
