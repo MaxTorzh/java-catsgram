@@ -26,6 +26,10 @@ public class PostService {
         return posts.values();
     }
 
+    public Optional<Post> findById(Long postId) {
+        return Optional.ofNullable(posts.get(postId));
+    }
+
     public Post create(Post post, Long authorId) {
         Optional<User> author = userService.findUserById(authorId);
         if (author.isEmpty()) {

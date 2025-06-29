@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    private final Map<String, User> users = new HashMap<>();
+    private final Map<Long, User> users = new HashMap<>();
 
     public Collection<User> findAll() {
         return users.values()
@@ -22,11 +22,8 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<User> findUserById(Long id) {
-        return users.values()
-                .stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst();
+    public Optional<User> findUserById(Long authorId) {
+        return Optional.ofNullable(users.get(authorId));
     }
 
     public User create(User user) {
@@ -38,7 +35,7 @@ public class UserService {
         }
         user.setId(getNextId());
         user.setRegistrationDate(Instant.now());
-        users.put(user.getEmail(), user);
+        users.put(user.getId(), user);
         return user;
     }
 
@@ -46,37 +43,30 @@ public class UserService {
         if (newUser.getId() == null) {
             throw new ConditionsNotMetException("Id должен быть указан");
         }
-        User existingUser = users.values()
-                .stream()
-                .filter(user -> user.getId().equals(newUser.getId()))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Пользователь с ID " + newUser.getId() + " не найден"));
-
-        // Проверка изменения email
-        if (newUser.getEmail() != null && !newUser.getEmail().equals(existingUser.getEmail())) {
-            if (newUser.getEmail().isBlank()) {
-                throw new ConditionsNotMetException("Имейл должен быть указан");
+        if (users.containsKey(newUser.getId())) {
+            User existingUser = users.get(newUser.getId());
+            if (newUser.getEmail() != null &&
+                    !existingUser.getEmail().equalsIgnoreCase(newUser.getEmail())) {
+                if (users.containsValue(newUser)) {
+                    throw new DuplicatedDataException("Данный email уже используется");
+                }
+                existingUser.setEmail(newUser.getEmail());
             }
-            if (users.containsKey(newUser.getEmail())) {
-                throw new DuplicatedDataException("Этот имейл уже используется");
+            if (newUser.getUsername() != null && !newUser.getUsername().isBlank()) {
+                existingUser.setUsername(newUser.getUsername());
             }
-            users.remove(existingUser.getEmail());
-            existingUser.setEmail(newUser.getEmail());
-            users.put(existingUser.getEmail(), existingUser);
+            if (newUser.getPassword() != null && !newUser.getPassword().isBlank()) {
+                existingUser.setPassword(newUser.getPassword());
+            }
+            return existingUser;
         }
-        if (newUser.getUsername() != null) {
-            existingUser.setUsername(newUser.getUsername());
-        }
-        if (newUser.getPassword() != null) {
-            existingUser.setPassword(newUser.getPassword());
-        }
-        return existingUser;
+        throw new NotFoundException("Пользователь с id = " + newUser.getId() + " не найден");
     }
 
     private long getNextId() {
-        return users.values()
+        return users.keySet()
                 .stream()
-                .mapToLong(User::getId)
+                .mapToLong(Long::longValue)
                 .max()
                 .orElse(0) + 1;
     }

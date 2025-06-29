@@ -8,10 +8,7 @@ import ru.yandex.practicum.catsgram.model.User;
 import ru.yandex.practicum.catsgram.service.UserService;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,6 +24,11 @@ public class UserController {
     @GetMapping
     public Collection<User> findAll() {
         return userService.findAll();
+    }
+
+    @GetMapping("/{userId}")
+    public Optional<User> findById(@PathVariable Long userId) {
+        return userService.findUserById(userId);
     }
 
     @PostMapping
