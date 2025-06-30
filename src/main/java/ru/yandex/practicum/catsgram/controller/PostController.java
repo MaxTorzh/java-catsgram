@@ -28,13 +28,13 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public Optional<Post> findById(@PathVariable Long postId) {
-        return postService.findById(postId);
+        return postService.findPostById(postId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Post create(@RequestBody Post post, @RequestParam Long authorId) {
-        return postService.create(post, authorId);
+    public Post create(@RequestBody Post post) {
+        return postService.create(post);
     }
 
     @PutMapping

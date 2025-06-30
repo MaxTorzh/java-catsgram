@@ -31,22 +31,19 @@ public class PostService {
                 .toList();
     }
 
-    public Optional<Post> findById(Long postId) {
+    public Optional<Post> findPostById(Long postId) {
         return Optional.ofNullable(posts.get(postId));
     }
 
-    public Post create(Post post, Long authorId) {
-        Optional<User> author = userService.findUserById(authorId);
-        if (author.isEmpty()) {
-            throw new ConditionsNotMetException("Автор с id = " + authorId + " не найден");
-        }
+    public Post create(Post post) {
         if (post.getDescription() == null || post.getDescription().isBlank()) {
             throw new ConditionsNotMetException("Описание не может быть пустым");
         }
+        userService.findUserById(post.getAuthorId())
+                .orElseThrow(() -> new ConditionsNotMetException("Автор с id = "
+                        + post.getAuthorId() + " не найден"));
         post.setId(getNextId());
         post.setPostDate(Instant.now());
-        post.setAuthor(author.get());
-        post.setAuthorId(author.get().getId());
         posts.put(post.getId(), post);
         return post;
     }
