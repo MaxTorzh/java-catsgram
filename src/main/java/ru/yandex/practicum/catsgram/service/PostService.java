@@ -65,7 +65,7 @@ public class PostService {
     private long getNextId() {
         return posts.keySet()
                 .stream()
-                .mapToLong(Long :: longValue)
+                .mapToLong(Long::longValue)
                 .max()
                 .orElse(0L) + 1;
     }
