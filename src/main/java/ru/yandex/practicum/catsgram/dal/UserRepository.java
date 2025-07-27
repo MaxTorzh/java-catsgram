@@ -15,12 +15,11 @@ public class UserRepository extends BaseRepository<User> {
     private static final String FIND_BY_EMAIL_QUERY = "SELECT * FROM users WHERE email = ?";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
     private static final String INSERT_QUERY = "INSERT INTO users(username, email, password, registration_date)" +
-            "VALUES(?, ?, ?, ?) returning id";
-    private static final String UPDATE_QUERY = "UPDATE users SET username = ?, email = ?, password = ?, WHERE id = ?";
-    private static final String DELETE_QUERY = "DELETE FROM users WHERE id = ?";
+            "VALUES (?, ?, ?, ?) returning id";
+    private static final String UPDATE_QUERY = "UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?";
 
     public UserRepository(JdbcTemplate jdbc, RowMapper<User> mapper) {
-        super(jdbc, mapper);
+        super(jdbc, mapper, User.class);
     }
 
     public List<User> findAll() {
@@ -28,15 +27,15 @@ public class UserRepository extends BaseRepository<User> {
     }
 
     public Optional<User> findByEmail(String email) {
-        return findOne(FIND_BY_ID_QUERY, email);
+        return findOne(FIND_BY_EMAIL_QUERY, email);
     }
 
-    public Optional<User> findById(Long userId) {
+    public Optional<User> findById(long userId) {
         return findOne(FIND_BY_ID_QUERY, userId);
     }
 
     public User save(User user) {
-        Long id = insert(
+        long id = insert(
                 INSERT_QUERY,
                 user.getUsername(),
                 user.getEmail(),
@@ -56,9 +55,5 @@ public class UserRepository extends BaseRepository<User> {
                 user.getId()
         );
         return user;
-    }
-
-    public boolean delete(Long userId) {
-        return delete(DELETE_QUERY, userId);
     }
 }

@@ -8,7 +8,7 @@ public class UpdateUserRequest {
     private String email;
     private String password;
 
-    public boolean hasUserName() {
+    public boolean hasUsername() {
         return ! (username == null || username.isBlank());
     }
 

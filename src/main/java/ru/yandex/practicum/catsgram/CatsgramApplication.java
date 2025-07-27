@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-class CatsgramApplication {
-    public static void main(final String[] args) {
+public class CatsgramApplication {
+    public static void main(String[] args) {
         SpringApplication.run(CatsgramApplication.class, args);
     }
 }

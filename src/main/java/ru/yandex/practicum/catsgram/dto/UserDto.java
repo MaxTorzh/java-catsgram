@@ -8,7 +8,7 @@ import java.time.Instant;
 @Data
 public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long id;
+    private long id;
     private String username;
     private String email;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

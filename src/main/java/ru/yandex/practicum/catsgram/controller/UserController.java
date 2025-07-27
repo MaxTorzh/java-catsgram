@@ -8,14 +8,24 @@ import ru.yandex.practicum.catsgram.dto.UpdateUserRequest;
 import ru.yandex.practicum.catsgram.dto.UserDto;
 import ru.yandex.practicum.catsgram.service.UserService;
 
-import java.util.*;
-
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto createUser(@RequestBody NewUserRequest userRequest) {
+        return userService.createUser(userRequest);
+    }
+
+    @PutMapping("/{userId}")
+    public UserDto updateUser(@PathVariable("userId") long userId, @RequestBody UpdateUserRequest request) {
+        return userService.updateUser(userId, request);
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -25,19 +35,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto getUserById(@PathVariable("userId") Long userId) {
+    public UserDto getUserById(@PathVariable("userId") long userId) {
         return userService.getUserById(userId);
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDto createUser(@RequestBody NewUserRequest userRequest) {
-        return userService.createUser(userRequest);
-    }
-
-    @PutMapping("/{userId}")
-    public UserDto updateUser(@PathVariable("userId") Long userId,
-                              @RequestBody UpdateUserRequest userRequest) {
-        return userService.updateUser(userId, userRequest);
     }
 }

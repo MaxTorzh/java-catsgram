@@ -1,18 +1,17 @@
 package ru.yandex.practicum.catsgram.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = "id")
 public class Post {
-    private Long id;
-    private Long authorId;
+    private long id;
+    private User author;
     private String description;
     private Instant postDate;
-    @JsonIgnore
-    private User author;
+    private List<Image> images;
 }

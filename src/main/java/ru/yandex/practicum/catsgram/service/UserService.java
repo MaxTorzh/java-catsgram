@@ -11,7 +11,8 @@ import ru.yandex.practicum.catsgram.exception.NotFoundException;
 import ru.yandex.practicum.catsgram.mapper.UserMapper;
 import ru.yandex.practicum.catsgram.model.User;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +28,7 @@ public class UserService {
             throw new ConditionsNotMetException("Имейл должен быть указан");
         }
 
+
         Optional<User> alreadyExistUser = userRepository.findByEmail(request.getEmail());
         if (alreadyExistUser.isPresent()) {
             throw new DuplicatedDataException("Данный имейл уже используется");
@@ -39,10 +41,10 @@ public class UserService {
         return UserMapper.mapToUserDto(user);
     }
 
-    public UserDto getUserById(Long userId) {
+    public UserDto getUserById(long userId) {
         return userRepository.findById(userId)
                 .map(UserMapper::mapToUserDto)
-                .orElseThrow(() -> new NotFoundException("Пользователь с ID: " + userId + " не найден."));
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден с ID: " + userId));
     }
 
     public List<UserDto> getUsers() {
@@ -52,12 +54,11 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDto updateUser(Long userId, UpdateUserRequest request) {
+    public UserDto updateUser(long userId, UpdateUserRequest request) {
         User updatedUser = userRepository.findById(userId)
                 .map(user -> UserMapper.updateUserFields(user, request))
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         updatedUser = userRepository.update(updatedUser);
         return UserMapper.mapToUserDto(updatedUser);
-
     }
 }

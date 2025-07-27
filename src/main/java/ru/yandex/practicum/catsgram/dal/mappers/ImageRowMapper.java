@@ -13,9 +13,9 @@ public class ImageRowMapper implements RowMapper<Image> {
     public Image mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         Image image = new Image();
         image.setId(resultSet.getLong("id"));
-        image.setPostId(resultSet.getLong("post_id"));
-        image.setOriginalFileName(resultSet.getString("original_name"));
+        image.setOriginalFileName(resultSet.getString("original_file_name"));
         image.setFilePath(resultSet.getString("file_path"));
+        image.setPostId(resultSet.getLong("post_id"));
         return image;
     }
 }

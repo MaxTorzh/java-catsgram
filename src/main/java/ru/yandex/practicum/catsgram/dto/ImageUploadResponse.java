@@ -3,9 +3,9 @@ package ru.yandex.practicum.catsgram.dto;
 import lombok.Data;
 
 @Data
-public class ImageDto {
+public class ImageUploadResponse {
     private long id;
     private long postId;
     private String fileName;
-    private byte[] data;
+    private String filePath;
 }
